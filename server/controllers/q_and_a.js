@@ -1,4 +1,4 @@
-const db = require('../q_and_a_database/index.js');
+const db = require('../models/qAnda');
 
 module.exports = {
   getQuestions: (req, res) => {
@@ -7,6 +7,7 @@ module.exports = {
     if (!count) {
       count = 4;
     }
+
     db.getQuestions(product_id, count, (err, result) => {
       if (err) {
         res.send('error');
@@ -16,7 +17,9 @@ module.exports = {
     });
   },
   addQuestion: (req, res) => {
-    const { product_id, body, name, email } = req.body;
+    const {
+      product_id, body, name, email,
+    } = req.body;
 
     db.addQuestion(product_id, body, name, email, (err, results) => {
       if (err) {
@@ -43,10 +46,12 @@ module.exports = {
   },
   addAnswer: (req, res) => {
     const { question_id } = req.params;
-    let { body, date_written, name, email, photos } = req.body;
+    const {
+      body, date_written, name, email, photos,
+    } = req.body;
     let dt = new Date();
     dt = dt.getTime();
-    // console.log(dt);
+
     if (!date_written) {
       let dt = new Date();
       dt = dt.getTime();
@@ -64,8 +69,7 @@ module.exports = {
     });
   },
   updateQuestionHelpful: (req, res) => {
-    // console.log('req.body in helpful put: ', req.body);
-    let { question_id } = req.params;
+    const { question_id } = req.params;
     if (!question_id) {
       res.send('error');
     }
@@ -78,7 +82,7 @@ module.exports = {
     });
   },
   updateAnswerHelpful: (req, res) => {
-    let { answer_id } = req.params;
+    const { answer_id } = req.params;
     if (!answer_id) {
       res.send('error');
     }
@@ -91,7 +95,7 @@ module.exports = {
     });
   },
   reportQuestion: (req, res) => {
-    let { question_id } = req.params;
+    const { question_id } = req.params;
     if (!question_id) {
       res.send('error');
     }
@@ -104,7 +108,7 @@ module.exports = {
     });
   },
   reportAnswer: (req, res) => {
-    let { answer_id } = req.params;
+    const { answer_id } = req.params;
     if (!answer_id) {
       res.send('error');
     }
