@@ -20,14 +20,22 @@ module.exports = {
     //   `SELECT * FROM product WHERE id = ${productId}`,
     //   `SELECT feature, value FROM features WHERE product_id = ${productId}`,
     // ];
+    // const queryString = [
+    //   `SELECT * FROM product WHERE id = ${productId}`,
+    //   `SELECT feature, value FROM features WHERE product_id = ${productId}`,
+    //   `select t3.thumbnail_url
+    //     from product t1
+    //     inner join styles t2 on t1.id = t2.product_id
+    //     inner join photos t3 on t2.id = t3.style_id
+    //     where t1.id = ${productId} limit 1;`,
+    // ];
     const queryString = [
-      `SELECT * FROM product WHERE id = ${productId}`,
-      `SELECT feature, value FROM features WHERE product_id = ${productId}`,
-      `select t3.thumbnail_url
+      `select t1.*, t3.thumbnail_url
         from product t1
-        inner join styles t2 on t1.id = t2.product_id
-        inner join photos t3 on t2.id = t3.style_id
+        left join styles t2 on t1.id = t2.product_id
+        left join photos t3 on t2.id = t3.style_id
         where t1.id = ${productId} limit 1;`,
+      `SELECT feature, value FROM features WHERE product_id = ${productId}`,
     ];
     const queryStringTest = [
       `EXPLAIN ANALYZE SELECT * FROM product WHERE id = ${productId}`,
@@ -41,8 +49,8 @@ module.exports = {
   getProductByIdRelated: (callback, productId) => {
     const queryString = `select t1.*, t3.thumbnail_url
     from product t1
-    inner join styles t2 on t1.id = t2.product_id
-    inner join photos t3 on t2.id = t3.style_id
+    left join styles t2 on t1.id = t2.product_id
+    left join photos t3 on t2.id = t3.style_id
     where t1.id = ${productId} limit 1;`;
 
     db.query(queryString, (err, response) => {
